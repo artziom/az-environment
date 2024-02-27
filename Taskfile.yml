@@ -27,7 +27,7 @@ tasks:
   app:build:
     deps:
       - missing-configuration
-    desc: Build docker containers and create a new Symfony project
+    desc: Build docker containers
     cmds:
       - task: docker:compose:build
 
@@ -35,7 +35,7 @@ tasks:
     deps:
       - missing-configuration
       - symfony:project-not-exist
-    desc: Build docker containers
+    desc: Build docker containers and create a new Symfony project
     cmds:
       - task: docker:compose:build
       - task: symfony:project:new
