@@ -1,0 +1,7 @@
+services:
+  php:
+    image: artziom/php-symfony-composer:8.3-xdebug
+    build: ../dockerfile/php/dev
+    volumes:
+      - .:/app
+

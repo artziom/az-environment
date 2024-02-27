@@ -1,0 +1,63 @@
+version: 3
+
+dotenv: [ '.env.local' ]
+
+includes:
+  docker:
+    taskfile: ./environment/taskfile/Docker.yml
+  symfony:
+    taskfile: ./environment/taskfile/Symfony.yml
+
+tasks:
+  missing-configuration:
+    internal: true
+    preconditions:
+      - sh: test -f .env.local
+        msg: Missing '.env.local' file. Run 'task env:init' command first.
+
+  env:init:
+    status:
+      - test -f .env.local
+    desc: Setup environment
+    cmds:
+      - date
+      - cp environment/.env .env.local
+      - echo "Next step => Run 'task app:build' or 'task app:new' command"
+
+  app:build:
+    deps:
+      - missing-configuration
+    desc: Build docker containers and create a new Symfony project
+    cmds:
+      - task: docker:compose:build
+
+  app:new:
+    deps:
+      - missing-configuration
+      - symfony:project-not-exist
+    desc: Build docker containers
+    cmds:
+      - task: docker:compose:build
+      - task: symfony:project:new
+
+  app:start:
+    desc: Start app
+    deps:
+      - missing-configuration
+    cmds:
+      - task: docker:compose:up
+
+  app:stop:
+    desc: Stop app
+    deps:
+      - missing-configuration
+    cmds:
+      - task: docker:compose:stop
+
+  app:destroy:
+    desc: Destroy app
+    deps:
+      - missing-configuration
+    cmds:
+      - task: docker:compose:down
+      - rm .env.local

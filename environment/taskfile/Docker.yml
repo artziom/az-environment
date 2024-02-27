@@ -1,0 +1,36 @@
+version: 3
+
+tasks:
+  version:
+    desc: Check docker version
+    cmds:
+      - docker -v
+
+  compose:build:
+    desc: Build all containers
+    internal: true
+    cmds:
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml build
+
+  compose:ps:
+    desc: List containers
+    cmds:
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml ps
+
+  compose:up:
+    desc: Start all containers in background
+    internal: true
+    cmds:
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml up -d
+
+  compose:stop:
+    desc: Start all containers
+    internal: true
+    cmds:
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml stop
+
+  compose:down:
+    desc: Remove all containers
+    internal: true
+    cmds:
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml down --volumes

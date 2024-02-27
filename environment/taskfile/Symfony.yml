@@ -1,0 +1,28 @@
+version: 3
+
+tasks:
+  project-not-exist:
+    internal: true
+    preconditions:
+      - sh: test ! -d symfony
+        msg: Symfony project already exist
+
+  project:new:
+    desc: Create a new Symfony project
+    internal: true
+    deps:
+      - project-not-exist
+    cmds:
+      - mkdir symfony
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony help
+
+  check:requirements:
+    desc: Check all requirements for Symfony
+    cmds:
+      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml exec php symfony check:requirements
+
+
+  cli:help:
+    desc: Show Symfony CLI help
+    cmds:
+      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml exec php symfony help
