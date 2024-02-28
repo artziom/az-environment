@@ -33,11 +33,10 @@ tasks:
 
   app:new:
     deps:
-      - missing-configuration
       - symfony:project-not-exist
     desc: Build docker containers and create a new Symfony project
     cmds:
-      - task: docker:compose:build
+      - task: app:build
       - task: symfony:project:new
 
   app:start:
@@ -55,9 +54,11 @@ tasks:
       - task: docker:compose:stop
 
   app:destroy:
-    desc: Destroy app
+    desc: Destroy app. Remove env files, project directories and destroy docker containers. Use only when You want to start from scratch!
+    prompt: This is a dangerous command... Do you want to continue?
     deps:
       - missing-configuration
     cmds:
       - task: docker:compose:down
       - rm .env.local
+      - rm -rf {{.PHP_APP_DIR}}

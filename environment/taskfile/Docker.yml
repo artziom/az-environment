@@ -34,3 +34,8 @@ tasks:
     internal: true
     cmds:
       - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml down --volumes
+
+  config:
+    desc: Parse, resolve and render compose file in canonical format
+    cmds:
+      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml config
