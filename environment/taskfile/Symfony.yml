@@ -4,25 +4,42 @@ tasks:
   project-not-exist:
     internal: true
     preconditions:
-      - sh: test ! -d symfony
+      - sh: test ! -d $PWD/{{.PHP_APP_DIR}}
         msg: Symfony project already exist
+
+  dev-only:
+    internal: true
+    preconditions:
+      - sh: '[ $ENV == "dev" ]'
+        msg: Task only for "dev" environment!
 
   project:new:
     desc: Create a new Symfony project
     internal: true
     deps:
+      - dev-only
       - project-not-exist
     cmds:
       - mkdir symfony
-      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony help
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony new . --no-git
+
+  server:start:
+    desc: Start Symfony server (dev environment only)
+    deps:
+      - dev-only
+    cmds:
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml run --rm --service-ports php symfony server:start
 
   check:requirements:
     desc: Check all requirements for Symfony
+    deps:
+      - dev-only
     cmds:
-      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml exec php symfony check:requirements
-
+      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony check:requirements
 
   cli:help:
     desc: Show Symfony CLI help
+    deps:
+      - dev-only
     cmds:
-      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml exec php symfony help
+      - cmd: docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony help
