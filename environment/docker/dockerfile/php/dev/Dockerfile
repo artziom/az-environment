@@ -25,3 +25,10 @@ RUN pecl install xdebug \
     && echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/php.ini \
     && echo "xdebug.mode=develop,debug" >> $PHP_INI_DIR/php.ini \
     && echo "xdebug.start_with_request=trigger" >> $PHP_INI_DIR/php.ini
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+USER user

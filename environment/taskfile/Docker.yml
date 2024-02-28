@@ -10,7 +10,7 @@ tasks:
     desc: Build all containers
     internal: true
     cmds:
-      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml build
+      - docker compose -f ./environment/docker/compose/compose.{{.ENV}}.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
 
   compose:ps:
     desc: List containers
