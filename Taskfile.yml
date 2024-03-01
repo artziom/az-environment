@@ -1,64 +1,35 @@
 version: 3
 
 dotenv: [ '.env.local' ]
+env:
+  PROJECT_DIR: { sh: pwd }
 
 includes:
-  docker:
-    taskfile: ./environment/taskfile/Docker.yml
+  env:
+    taskfile: ./environment/taskfile/Env.yml
   symfony:
     taskfile: ./environment/taskfile/Symfony.yml
 
 tasks:
+  project-dir:
+    desc: Print project directory
+    cmds:
+      - echo {{.PROJECT_DIR}}
+
   missing-configuration:
     internal: true
     preconditions:
       - sh: test -f .env.local
         msg: Missing '.env.local' file. Run 'task env:init' command first.
 
-  env:init:
-    status:
-      - test -f .env.local
-    desc: Setup environment
-    cmds:
-      - date
-      - cp environment/.env .env.local
-      - echo "Next step => Run 'task app:build' or 'task app:new' command"
+  project-not-exist:
+    internal: true
+    preconditions:
+      - sh: test ! -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
+        msg: Symfony project already exist
 
-  app:build:
-    deps:
-      - missing-configuration
-    desc: Build docker containers
-    cmds:
-      - task: docker:compose:build
-
-  app:new:
-    deps:
-      - symfony:project-not-exist
-    desc: Build docker containers and create a new Symfony project
-    cmds:
-      - task: app:build
-      - task: symfony:project:new
-
-  app:start:
-    desc: Start app
-    deps:
-      - missing-configuration
-    cmds:
-      - task: docker:compose:up
-
-  app:stop:
-    desc: Stop app
-    deps:
-      - missing-configuration
-    cmds:
-      - task: docker:compose:stop
-
-  app:destroy:
-    desc: Destroy app. Remove env files, project directories and destroy docker containers. Use only when You want to start from scratch!
-    prompt: This is a dangerous command... Do you want to continue?
-    deps:
-      - missing-configuration
-    cmds:
-      - task: docker:compose:down
-      - rm .env.local
-      - rm -rf {{.PHP_APP_DIR}}
+  dev-only:
+    internal: true
+    preconditions:
+      - sh: '[ $ENV == "dev" ]'
+        msg: Task only for "dev" environment!
