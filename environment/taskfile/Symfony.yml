@@ -9,7 +9,7 @@ tasks:
       - :project-not-exist
     cmds:
       - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
-      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml run php symfony new . --no-git
+      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony new . --no-git
 
   server:start:
     desc: Start Symfony server (dev environment only)

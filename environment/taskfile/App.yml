@@ -4,13 +4,13 @@ tasks:
   start:
     desc: Start app
     deps:
-      - missing-configuration
+      - :missing-configuration
     cmds:
-      - task: docker:compose:up
+      - task: :docker:compose:up
 
   stop:
     desc: Stop app
     deps:
-      - missing-configuration
+      - :missing-configuration
     cmds:
-      - task: docker:compose:stop
+      - task: :docker:compose:stop

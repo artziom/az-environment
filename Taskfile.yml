@@ -9,6 +9,10 @@ includes:
     taskfile: ./environment/taskfile/Env.yml
   symfony:
     taskfile: ./environment/taskfile/Symfony.yml
+  app:
+    taskfile: ./environment/taskfile/App.yml
+  docker:
+    taskfile: ./environment/taskfile/Docker.yml
 
 tasks:
   project-dir:
