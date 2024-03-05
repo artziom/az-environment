@@ -32,6 +32,12 @@ tasks:
       - sh: test ! -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
         msg: Symfony project already exist
 
+  project-exist:
+    internal: true
+    preconditions:
+      - sh: test -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
+        msg: Symfony project not exist
+
   dev-only:
     internal: true
     preconditions:

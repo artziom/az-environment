@@ -7,6 +7,7 @@ tasks:
       - :missing-configuration
     cmds:
       - task: :docker:compose:up
+      - task: :symfony:server:start
 
   stop:
     desc: Stop app
