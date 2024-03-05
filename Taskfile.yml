@@ -7,6 +7,6 @@ tasks:
     desc: Setup environment
     cmds:
       - date
-      - cp environment/.env .env.local
-      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
-      - cp environment/taskfile/Taskfile.yml Taskfile.yml
+#      - cp environment/.env .env.local
+#      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
+#      - cp environment/taskfile/Taskfile.yml Taskfile.yml
