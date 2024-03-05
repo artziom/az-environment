@@ -1,7 +1,12 @@
 Installation
 ------------
 
-1. Create and/or copy required directories & files with command
+1. Clone repository
+2. Change branch to ```project-initializer```
+```shell
+git checkout project-initializer
+```
+2. Create and/or copy required directories & files with command
 ```shell
 task env:init
 ```
