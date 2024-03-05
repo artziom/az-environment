@@ -2,11 +2,13 @@ version: 3
 
 tasks:
   env:init:
-    status:
-      - test -f .env.local
     desc: Setup environment
     cmds:
-      - date
+      - rm -rf .git
+      - git init
+      - git submodule add https://github.com/artziom/az-environment.git environment
       - cp environment/.env .env.local
-      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
+      - cp environment/.gitignore .gitignore
       - cp environment/taskfile/Taskfile.yml Taskfile.yml
+      - cp environment/taskfile/README.md README.md
+      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
