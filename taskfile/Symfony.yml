@@ -1,0 +1,42 @@
+version: 3
+
+tasks:
+  terminal:
+    desc: Run terminal for Symfony project container
+    deps:
+      - :dev-only
+      - :project-exist
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml exec php bash
+
+  project:new:
+    desc: Create a new Symfony project
+    internal: true
+    deps:
+      - :dev-only
+      - :project-not-exist
+    cmds:
+      - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
+      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony new . --no-git
+
+  server:start:
+    desc: Start Symfony server (dev environment only)
+    internal: true
+    deps:
+      - :dev-only
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml exec php symfony server:start
+
+  check:requirements:
+    desc: Check all requirements for Symfony
+    deps:
+      - :dev-only
+    cmds:
+      - cmd: docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony check:requirements
+
+  cli:help:
+    desc: Show Symfony CLI help
+    deps:
+      - :dev-only
+    cmds:
+      - cmd: docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml run --rm php symfony help

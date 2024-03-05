@@ -1,0 +1,45 @@
+version: 3
+
+dotenv: [ '.env.local' ]
+env:
+  PROJECT_DIR: { sh: pwd }
+
+includes:
+  env:
+    taskfile: ./environment/taskfile/Env.yml
+  symfony:
+    taskfile: ./environment/taskfile/Symfony.yml
+  app:
+    taskfile: ./environment/taskfile/App.yml
+  docker:
+    taskfile: ./environment/taskfile/Docker.yml
+
+tasks:
+  project-dir:
+    desc: Print project directory
+    cmds:
+      - echo {{.PROJECT_DIR}}
+
+  missing-configuration:
+    internal: true
+    preconditions:
+      - sh: test -f .env.local
+        msg: Missing '.env.local' file. Run 'task env:init' command first.
+
+  project-not-exist:
+    internal: true
+    preconditions:
+      - sh: test ! -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
+        msg: Symfony project already exist
+
+  project-exist:
+    internal: true
+    preconditions:
+      - sh: test -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
+        msg: Symfony project not exist
+
+  dev-only:
+    internal: true
+    preconditions:
+      - sh: '[ $ENV == "dev" ]'
+        msg: Task only for "dev" environment!
