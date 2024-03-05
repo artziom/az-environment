@@ -7,6 +7,10 @@ tasks:
     desc: Setup environment
     cmds:
       - date
-#      - cp environment/.env .env.local
+      - rm -rf .git
+      - git init
+      - git submodule add -b 1.0 https://github.com/artziom/az-environment.git environment
+      - cp environment/.env .env.local
+      - cp environment/.gitignore .gitignore
 #      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
 #      - cp environment/taskfile/Taskfile.yml Taskfile.yml
