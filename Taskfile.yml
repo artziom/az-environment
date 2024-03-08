@@ -9,7 +9,7 @@ tasks:
       - git submodule add -b 1.0 https://github.com/artziom/az-environment.git environment
       - cp environment/.env .env.local
       - cp environment/.gitignore .gitignore
-      - cp environment/taskfile/_README.md README.md
+      - cp environment/_README.md README.md
       - cp environment/taskfile/Taskfile.yml Taskfile.yml
       - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
       - git add .
