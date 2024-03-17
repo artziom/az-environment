@@ -11,6 +11,6 @@ tasks:
       - cp environment/.gitignore .gitignore
       - cp environment/_README.md README.md
       - cp environment/taskfile/Taskfile.yml Taskfile.yml
-      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
       - git add .
       - git commit -m "Initial commit"
+      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
