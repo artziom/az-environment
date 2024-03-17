@@ -6,36 +6,45 @@ tasks:
     cmds:
       - docker -v
 
+  compose:init:
+    desc: Create local compose file
+    cmds:
+      - cp environment/docker/compose/compose.{{.ENV}}.yaml compose.yaml
+      - sed -i 's@${PROJECT_NAME}@{{.PROJECT_NAME}}@g' compose.yaml
+      - sed -i 's@${PROJECT_DIR}@{{.PROJECT_DIR}}@g' compose.yaml
+      - sed -i 's@${PHP_APP_PORT}@{{.PHP_APP_PORT}}@g' compose.yaml
+      - sed -i 's@${PHP_APP_DIR}@{{.PHP_APP_DIR}}@g' compose.yaml
+
   compose:build:
     desc: Build all containers
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
 
   compose:ps:
     desc: List containers
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml ps
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml ps
 
   compose:up:
     desc: Start all containers in background
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml up -d
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml up -d
 
   compose:stop:
     desc: Start all containers
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml stop
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml stop
 
   compose:down:
     desc: Remove all containers
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml down --volumes
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml down --volumes
 
   config:
     desc: Parse, resolve and render compose file in canonical format
     cmds:
-      - cmd: docker compose -f {{.PROJECT_DIR}}/environment/docker/compose/compose.{{.ENV}}.yaml config
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml config
