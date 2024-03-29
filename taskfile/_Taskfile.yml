@@ -13,4 +13,6 @@ tasks:
       - cp environment/taskfile/Taskfile.yml Taskfile.yml
       - git add .
       - git commit -m "Initial commit"
-      - echo "Next step => Run 'task env:build' or 'task env:new-project' command"
+      - echo "Next steps"
+      - echo "Option 1 => Run 'task docker:compose:init', edit .env and .env.compose files, then run 'task env:build' command for creating specific environment (prod|dev|custom)"
+      - echo "Option 2 => Run 'task env:new-project' command for build default dev environment and create new symfony project"
