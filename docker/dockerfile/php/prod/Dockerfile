@@ -10,11 +10,12 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
     && apt update && apt install -y \
     symfony-cli \
-    libicu-dev libpq-dev \
+    libicu-dev libpq-dev libzip-dev \
+    unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install APCU, OPCACHE, INTL, PDO
 RUN pecl install apcu \
-    && docker-php-ext-install opcache intl pdo_pgsql \
+    && docker-php-ext-install opcache intl pdo_pgsql zip \
     && docker-php-ext-enable apcu

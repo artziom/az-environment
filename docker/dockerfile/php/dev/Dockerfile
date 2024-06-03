@@ -11,6 +11,7 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | b
     && apt update && apt install -y \
     symfony-cli \
     libicu-dev libpq-dev libzip-dev \
+    unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
