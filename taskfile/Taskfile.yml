@@ -43,3 +43,10 @@ tasks:
     preconditions:
       - sh: '[ $ENV == "dev" ]'
         msg: Task only for "dev" environment!
+
+  env:update:
+    desc: Update environment files
+    cmds:
+      - git submodule update --init
+      - cp environment/taskfile/Taskfile.yml Taskfile.yml
+      - git submodule update --remote
