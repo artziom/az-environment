@@ -6,12 +6,16 @@ env:
 
 includes:
   env:
+    optional: true
     taskfile: ./environment/taskfile/Env.yml
   symfony:
+    optional: true
     taskfile: ./environment/taskfile/Symfony.yml
   app:
+    optional: true
     taskfile: ./environment/taskfile/App.yml
   docker:
+    optional: true
     taskfile: ./environment/taskfile/Docker.yml
 
 tasks:
