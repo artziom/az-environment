@@ -51,6 +51,5 @@ tasks:
   env:update:
     desc: Update environment files
     cmds:
-      - git submodule update --init
-      - cp environment/taskfile/Taskfile.yml Taskfile.yml
       - git submodule update --remote
+      - cp environment/taskfile/Taskfile.yml Taskfile.yml
