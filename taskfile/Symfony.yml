@@ -8,7 +8,7 @@ tasks:
       - :project-exist
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php bash
-
+  
   project:new:
     desc: Create a new Symfony project
     internal: true
@@ -18,7 +18,7 @@ tasks:
     cmds:
       - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony new . --no-git
-
+  
   server:start:
     desc: Start Symfony server (dev environment only)
     internal: true
@@ -26,17 +26,25 @@ tasks:
       - :dev-only
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start
-
+  
   check:requirements:
     desc: Check all requirements for Symfony
     deps:
       - :dev-only
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony check:requirements
-
+  
   cli:help:
     desc: Show Symfony CLI help
     deps:
       - :dev-only
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony help
+  
+  composer:install:
+    desc: Install Symfony dependencies
+    internal: true
+    deps:
+      - :project-exist
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer install
