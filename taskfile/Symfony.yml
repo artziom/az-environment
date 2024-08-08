@@ -48,3 +48,10 @@ tasks:
       - :project-exist
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer install
+  
+  composer:update:
+    desc: Update Symfony dependencies
+    deps:
+      - :project-exist
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer update
