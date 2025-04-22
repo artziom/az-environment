@@ -11,6 +11,9 @@ includes:
   symfony:
     optional: true
     taskfile: ./environment/taskfile/Symfony.yml
+  node:
+    optional: true
+    taskfile: ./environment/taskfile/NextJS.yml
   app:
     optional: true
     taskfile: ./environment/taskfile/App.yml
