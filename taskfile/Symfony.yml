@@ -25,7 +25,7 @@ tasks:
     deps:
       - :dev-only
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start -d
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start -allow-all-ip -d
 
   server:stop:
     desc: Stop Symfony server (dev environment only)
