@@ -17,4 +17,4 @@ tasks:
     deps:
       - :dev-only
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm --service-ports node npm run dev -d
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm --service-ports node npm run dev
