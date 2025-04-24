@@ -23,4 +23,5 @@ tasks:
     deps:
       - :missing-configuration
     cmds:
+      - task: :symfony:server:stop
       - task: :docker:compose:stop
