@@ -7,7 +7,7 @@ tasks:
       - :missing-configuration
     cmds:
       - task: :symfony:composer:install
-  
+
   start:
     desc: Start app
     deps:
@@ -15,7 +15,8 @@ tasks:
     cmds:
       - task: :docker:compose:up
       - task: :symfony:server:start
-  
+      - task: :nextjs:server:start
+
   stop:
     desc: Stop app
     deps:

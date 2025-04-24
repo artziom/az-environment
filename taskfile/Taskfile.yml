@@ -11,7 +11,7 @@ includes:
   symfony:
     optional: true
     taskfile: ./environment/taskfile/Symfony.yml
-  node:
+  nextjs:
     optional: true
     taskfile: ./environment/taskfile/NextJS.yml
   app:
@@ -33,17 +33,23 @@ tasks:
       - sh: test -f .env.local
         msg: Missing '.env.local' file. Run 'task env:init' command first.
 
-  project-not-exist:
+  php-app-not-exist:
     internal: true
     preconditions:
       - sh: test ! -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
         msg: Symfony project already exist
 
-  project-exist:
+  php-app-exist:
     internal: true
     preconditions:
       - sh: test -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
         msg: Symfony project not exist
+
+  node-app-not-exist:
+    internal: true
+    preconditions:
+      - sh: test ! -d {{.PROJECT_DIR}}/{{.NODE_APP_DIR}}
+        msg: Node app already exist
 
   dev-only:
     internal: true

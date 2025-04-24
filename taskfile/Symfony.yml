@@ -5,7 +5,7 @@ tasks:
     desc: Run terminal for Symfony project container
     deps:
       - :dev-only
-      - :project-exist
+      - :php-app-exist
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php bash
   
@@ -14,7 +14,7 @@ tasks:
     internal: true
     deps:
       - :dev-only
-      - :project-not-exist
+      - :php-app-not-exist
     cmds:
       - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony new . --no-git
@@ -45,13 +45,13 @@ tasks:
     desc: Install Symfony dependencies
     internal: true
     deps:
-      - :project-exist
+      - :php-app-exist
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer install
   
   composer:update:
     desc: Update Symfony dependencies
     deps:
-      - :project-exist
+      - :php-app-exist
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer update
