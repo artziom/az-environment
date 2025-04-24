@@ -22,8 +22,8 @@ services:
       - data:/var/lib/postgresql/data
 
   node:
-    build:
-      context: environment/docker/dockerfile/node/dev
+    image: node
+    user: "node"
     env_file:
       - .env.compose
     ports:
