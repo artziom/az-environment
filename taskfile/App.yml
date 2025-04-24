@@ -16,6 +16,7 @@ tasks:
       - task: :docker:compose:up
       - task: :symfony:server:start
       - task: :nextjs:server:start
+      - task: :symfony:server:stop
 
   stop:
     desc: Stop app

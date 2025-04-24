@@ -25,7 +25,15 @@ tasks:
     deps:
       - :dev-only
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start -d
+
+  server:stop:
+    desc: Stop Symfony server (dev environment only)
+    internal: true
+    deps:
+      - :dev-only
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:stop
   
   check:requirements:
     desc: Check all requirements for Symfony

@@ -10,11 +10,11 @@ tasks:
     cmds:
       - mkdir {{.PROJECT_DIR}}/{{.NODE_APP_DIR}}
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm node npx create-next-app@latest
-  
+
   server:start:
     desc: Start Next.js server (dev environment only)
     internal: true
     deps:
       - :dev-only
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec node npm run dev
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm node npm run dev -d
