@@ -11,9 +11,6 @@ includes:
   symfony:
     optional: true
     taskfile: ./environment/taskfile/Symfony.yml
-  nextjs:
-    optional: true
-    taskfile: ./environment/taskfile/NextJS.yml
   app:
     optional: true
     taskfile: ./environment/taskfile/App.yml
@@ -44,12 +41,6 @@ tasks:
     preconditions:
       - sh: test -d {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
         msg: Symfony project not exist
-
-  node-app-not-exist:
-    internal: true
-    preconditions:
-      - sh: test ! -d {{.PROJECT_DIR}}/{{.NODE_APP_DIR}}
-        msg: Node app already exist
 
   dev-only:
     internal: true
