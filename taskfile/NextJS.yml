@@ -1,0 +1,20 @@
+version: 3
+
+tasks:
+  project:new:
+    desc: Create a new Next.js project
+    internal: true
+    deps:
+      - :dev-only
+      - :node-app-not-exist
+    cmds:
+      - mkdir {{.PROJECT_DIR}}/{{.NODE_APP_DIR}}
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm node npx create-next-app@latest
+
+  server:start:
+    desc: Start Next.js server (dev environment only)
+    internal: true
+    deps:
+      - :dev-only
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm --service-ports node npm run dev
