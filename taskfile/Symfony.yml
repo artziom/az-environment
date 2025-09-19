@@ -26,6 +26,7 @@ tasks:
       - :dev-only
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start -allow-all-ip -d
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony console lexik:jwt:generate-keypair --skip-if-exists
 
   server:stop:
     desc: Stop Symfony server (dev environment only)
