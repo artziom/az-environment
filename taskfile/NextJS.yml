@@ -18,3 +18,19 @@ tasks:
       - :dev-only
     cmds:
       - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm --service-ports node npm run dev
+
+  npm:install:
+    desc: Install Next.js dependencies
+    internal: true
+    deps:
+      - :node-app-exist
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm node npm install
+
+  terminal:
+    desc: Run terminal for Next.js project container
+    deps:
+      - :dev-only
+      - :node-app-exist
+    cmds:
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec node bash

@@ -7,6 +7,7 @@ tasks:
       - :missing-configuration
     cmds:
       - task: :symfony:composer:install
+      - task: :nextjs:npm:install
 
   start:
     desc: Start app
