@@ -1,66 +1,74 @@
 version: 3
 
 tasks:
-  terminal:
-    desc: Run terminal for Symfony project container
-    deps:
-      - :dev-only
-      - :php-app-exist
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php bash
-  
-  project:new:
-    desc: Create a new Symfony project
-    internal: true
-    deps:
-      - :dev-only
-      - :php-app-not-exist
-    cmds:
-      - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony new . --no-git
-  
-  server:start:
-    desc: Start Symfony server (dev environment only)
-    internal: true
-    deps:
-      - :dev-only
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start -allow-all-ip -d
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony console lexik:jwt:generate-keypair --skip-if-exists
-
-  server:stop:
-    desc: Stop Symfony server (dev environment only)
-    internal: true
-    deps:
-      - :dev-only
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:stop
-  
-  check:requirements:
-    desc: Check all requirements for Symfony
-    deps:
-      - :dev-only
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony check:requirements
-  
-  cli:help:
-    desc: Show Symfony CLI help
-    deps:
-      - :dev-only
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony help
-  
-  composer:install:
-    desc: Install Symfony dependencies
-    internal: true
-    deps:
-      - :php-app-exist
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer install
-  
-  composer:update:
-    desc: Update Symfony dependencies
-    deps:
-      - :php-app-exist
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer update
+    terminal:
+        desc: Run terminal for Symfony project container
+        deps:
+            - :dev-only
+            - :php-app-exist
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php bash
+    
+    project:new:
+        desc: Create a new Symfony project
+        internal: true
+        deps:
+            - :dev-only
+            - :php-app-not-exist
+        cmds:
+            - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony new . --no-git
+    
+    server:start:
+        desc: Start Symfony server (dev environment only)
+        internal: true
+        deps:
+            - :dev-only
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:start -allow-all-ip -d
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony console lexik:jwt:generate-keypair --skip-if-exists
+    
+    server:stop:
+        desc: Stop Symfony server (dev environment only)
+        internal: true
+        deps:
+            - :dev-only
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml exec php symfony server:stop
+    
+    check:requirements:
+        desc: Check all requirements for Symfony
+        deps:
+            - :dev-only
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony check:requirements
+    
+    cli:help:
+        desc: Show Symfony CLI help
+        deps:
+            - :dev-only
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php symfony help
+    
+    composer:install:
+        desc: Install Symfony dependencies
+        internal: true
+        deps:
+            - :php-app-exist
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer install
+    
+    composer:update:
+        desc: Update Symfony dependencies
+        deps:
+            - :php-app-exist
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php composer update
+    
+    test:run:
+        desc: Run Symfony tests
+        deps:
+            - :php-app-exist
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php bin/console cache:clear --env=test
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php bin/phpunit

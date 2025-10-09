@@ -1,28 +1,33 @@
 version: 3
 
 tasks:
-  install:
-    desc: Install project dependencies
-    deps:
-      - :missing-configuration
-    cmds:
-      - task: :symfony:composer:install
-      - task: :nextjs:npm:install
-
-  start:
-    desc: Start app
-    deps:
-      - :missing-configuration
-    cmds:
-      - task: :docker:compose:up
-      - task: :symfony:server:start
-      - defer: { task: stop }
-      - task: :nextjs:server:start
-
-  stop:
-    desc: Stop app
-    deps:
-      - :missing-configuration
-    cmds:
-      - task: :symfony:server:stop
-      - task: :docker:compose:stop
+    install:
+        desc: Install project dependencies
+        deps:
+            - :missing-configuration
+        cmds:
+            -   task: :symfony:composer:install
+            -   task: :nextjs:npm:install
+    
+    start:
+        desc: Start app
+        deps:
+            - :missing-configuration
+        cmds:
+            -   task: :docker:compose:up
+            -   task: :symfony:server:start
+            -   defer: { task: stop }
+            -   task: :nextjs:server:start
+    
+    stop:
+        desc: Stop app
+        deps:
+            - :missing-configuration
+        cmds:
+            -   task: :symfony:server:stop
+            -   task: :docker:compose:stop
+    
+    test:run:
+        desc: Run tests
+        cmds:
+            -   task: :symfony:test:run
