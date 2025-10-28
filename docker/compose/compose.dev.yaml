@@ -1,5 +1,8 @@
 name: ${PROJECT_NAME}
 
+include:
+    - compose.project.yaml
+
 services:
   php:
     build:
