@@ -12,10 +12,6 @@ tasks:
       - cp environment/docker/compose/compose.project.yaml compose.project.yaml
       - cp environment/docker/compose/compose.{{.ENV}}.yaml compose.yaml
       - cp environment/docker/env/.env.compose.{{.ENV}} .env.compose
-      - sed -i 's@${PROJECT_NAME}@{{.PROJECT_NAME}}@g' compose.yaml
-      - sed -i 's@${PROJECT_DIR}@{{.PROJECT_DIR}}@g' compose.yaml
-      - sed -i 's@${PHP_APP_PORT}@{{.PHP_APP_PORT}}@g' compose.yaml
-      - sed -i 's@${PHP_APP_DIR}@{{.PHP_APP_DIR}}@g' compose.yaml
       - echo "Next step => Run 'task env:build' build containers"
 
   compose:build:
