@@ -72,4 +72,4 @@ tasks:
             - :php-app-exist
         cmds:
             - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php bin/console cache:clear --env=test
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php bin/phpunit
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm php bin/phpunit {{.CLI_ARGS}}
