@@ -33,7 +33,7 @@ services:
       - ${NODE_APP_PORT}:3000
     volumes:
       - ${PROJECT_DIR}/${NODE_APP_DIR}:/app/${NODE_APP_DIR}
-    working_dir: /app
+    working_dir: /app/${NODE_APP_DIR}
 
 volumes:
   data: {}
