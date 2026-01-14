@@ -9,7 +9,7 @@ tasks:
       - :node-app-not-exist
     cmds:
       - mkdir {{.PROJECT_DIR}}/{{.NODE_APP_DIR}}
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run --rm node npx create-next-app@latest
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml run -v {{.PROJECT_DIR}}:/app -w /app --rm node npx create-next-app@latest
 
   server:start:
     desc: Start Next.js server (dev environment only)
