@@ -18,32 +18,32 @@ tasks:
     desc: Build all containers
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
 
   compose:ps:
     desc: List containers
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml ps
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml ps
 
   compose:up:
     desc: Start all containers in background
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml up -d
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml up -d
 
   compose:stop:
     desc: Start all containers
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml stop
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml stop
 
   compose:down:
     desc: Remove all containers
     internal: true
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml down --volumes
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down --volumes
 
   config:
     desc: Parse, resolve and render compose file in canonical format
     cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml config
+      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml config
