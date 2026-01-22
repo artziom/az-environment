@@ -33,7 +33,6 @@ tasks:
     
     compose:stop:
         desc: Start all containers
-        internal: true
         cmds:
             - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml stop
     
