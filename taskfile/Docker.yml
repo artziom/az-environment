@@ -1,49 +1,49 @@
 version: 3
 
 tasks:
-  version:
-    desc: Check docker version
-    cmds:
-      - docker -v
-
-  compose:init:
-    desc: Create local compose file
-    cmds:
-      - cp environment/docker/compose/compose.project.yaml compose.project.yaml
-      - cp environment/docker/compose/compose.{{.ENV}}.yaml compose.yaml
-      - cp environment/docker/env/.env.compose.{{.ENV}} .env.compose
-      - echo "Next step => Run 'task env:build' build containers"
-
-  compose:build:
-    desc: Build all containers
-    internal: true
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
-
-  compose:ps:
-    desc: List containers
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml ps
-
-  compose:up:
-    desc: Start all containers in background
-    internal: true
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml up -d
-
-  compose:stop:
-    desc: Start all containers
-    internal: true
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml stop
-
-  compose:down:
-    desc: Remove all containers
-    internal: true
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down --volumes
-
-  config:
-    desc: Parse, resolve and render compose file in canonical format
-    cmds:
-      - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml config
+    version:
+        desc: Check docker version
+        cmds:
+            - docker -v
+    
+    compose:init:
+        desc: Create local compose file
+        cmds:
+            - cp environment/docker/compose/compose.project.yaml compose.project.yaml
+            - cp environment/docker/compose/compose.{{.ENV}}.yaml compose.yaml
+            - cp environment/docker/env/.env.compose.{{.ENV}} .env.compose
+            - echo "Next step => Run 'task env:build' build containers"
+    
+    compose:build:
+        desc: Build all containers
+        internal: true
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
+    
+    compose:ps:
+        desc: List containers
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml ps
+    
+    compose:up:
+        desc: Start all containers in background
+        internal: true
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml up -d
+    
+    compose:stop:
+        desc: Start all containers
+        internal: true
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml stop
+    
+    compose:down:
+        desc: Remove all containers
+        internal: true
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down --volumes
+    
+    config:
+        desc: Parse, resolve and render compose file in canonical format
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml config

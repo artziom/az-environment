@@ -16,15 +16,14 @@ tasks:
         cmds:
             -   task: :docker:compose:up
             -   task: :symfony:server:start
-            -   defer: { task: stop }
             -   task: :nextjs:server:start
-        ignore_error: true
     
     stop:
         desc: Stop app
         deps:
             - :missing-configuration
         cmds:
+            -   task: :nextjs:server:stop
             -   task: :symfony:server:stop
             -   task: :docker:compose:stop
     
