@@ -22,7 +22,7 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-      - data:/var/lib/postgresql/data
+      - ${PROJECT_DIR}/.data/postgres:/var/lib/postgresql/data
 
   node:
     image: node
@@ -34,6 +34,3 @@ services:
     volumes:
       - ${PROJECT_DIR}/${NODE_APP_DIR}:/app/${NODE_APP_DIR}
     working_dir: /app/${NODE_APP_DIR}
-
-volumes:
-  data: {}

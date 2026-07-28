@@ -1,4 +1,7 @@
 /.idea
 /.env.local
 /.env.compose
+/.env.compose.project.*
+!/.env.compose.project.*.example
 /compose.yaml
+/.data
