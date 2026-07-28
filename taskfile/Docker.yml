@@ -36,8 +36,13 @@ tasks:
         internal: true
         cmds:
             - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml stop
-    
+
     compose:down:
+        desc: Remove all containers
+        cmds:
+            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down
+    
+    compose:down:with-volumes:
         desc: Remove all containers
         cmds:
             - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down --volumes
