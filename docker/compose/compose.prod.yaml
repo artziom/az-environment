@@ -1,7 +1,36 @@
+name: ${PROJECT_NAME}
+
+include:
+  - compose.project.yaml
+
 services:
   php:
-    image: artziom/php-symfony-composer:8.3
-    build: ${PWD}/environment/docker/dockerfile/php/prod
+    build:
+      context: environment/docker/dockerfile/php/dev
+    env_file:
+      - .env.compose
+    ports:
+      - ${PHP_APP_PORT}:8000
     volumes:
-      - ${PWD}/${PHP_APP_DIR}:/app
+      - ${PROJECT_DIR}/${PHP_APP_DIR}:/app
     working_dir: /app
+
+  postgres:
+    image: postgres
+    env_file:
+      - .env.compose
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ${PROJECT_DIR}/.data/postgres:/var/lib/postgresql/data
+
+  node:
+    image: node
+    user: "node"
+    env_file:
+      - .env.compose
+    ports:
+      - ${NODE_APP_PORT}:3000
+    volumes:
+      - ${PROJECT_DIR}/${NODE_APP_DIR}:/app/${NODE_APP_DIR}
+    working_dir: /app/${NODE_APP_DIR}
