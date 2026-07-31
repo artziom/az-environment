@@ -7,7 +7,7 @@ tasks:
             - :dev-only
             - :php-app-exist
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml exec php bash
+            - docker compose {{.COMPOSE_FILES}} exec php bash
     
     project:new:
         desc: Create a new Symfony project
@@ -17,7 +17,7 @@ tasks:
             - :php-app-not-exist
         cmds:
             - mkdir {{.PROJECT_DIR}}/{{.PHP_APP_DIR}}
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php symfony new . --no-git
+            - docker compose {{.COMPOSE_FILES}} run --rm php symfony new . --no-git
     
     server:start:
         desc: Start Symfony server (dev environment only)
@@ -25,8 +25,8 @@ tasks:
         deps:
             - :dev-only
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml exec php symfony server:start -allow-all-ip -d
-            - cmd: docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml exec php symfony console lexik:jwt:generate-keypair --skip-if-exists
+            - docker compose {{.COMPOSE_FILES}} exec php symfony server:start -allow-all-ip -d
+            - cmd: docker compose {{.COMPOSE_FILES}} exec php symfony console lexik:jwt:generate-keypair --skip-if-exists
               ignore_error: true
     
     server:stop:
@@ -35,21 +35,21 @@ tasks:
         deps:
             - :dev-only
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml exec php symfony server:stop
+            - docker compose {{.COMPOSE_FILES}} exec php symfony server:stop
     
     check:requirements:
         desc: Check all requirements for Symfony
         deps:
             - :dev-only
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php symfony check:requirements
+            - docker compose {{.COMPOSE_FILES}} run --rm php symfony check:requirements
     
     cli:help:
         desc: Show Symfony CLI help
         deps:
             - :dev-only
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php symfony help
+            - docker compose {{.COMPOSE_FILES}} run --rm php symfony help
     
     composer:install:
         desc: Install Symfony dependencies
@@ -57,19 +57,19 @@ tasks:
         deps:
             - :php-app-exist
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php composer install
+            - docker compose {{.COMPOSE_FILES}} run --rm php composer install
     
     composer:update:
         desc: Update Symfony dependencies
         deps:
             - :php-app-exist
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php composer update
+            - docker compose {{.COMPOSE_FILES}} run --rm php composer update
     
     test:run:
         desc: Run Symfony tests
         deps:
             - :php-app-exist
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php bin/console cache:clear --env=test
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm php bin/phpunit {{.CLI_ARGS}}
+            - docker compose {{.COMPOSE_FILES}} run --rm php bin/console cache:clear --env=test
+            - docker compose {{.COMPOSE_FILES}} run --rm php bin/phpunit {{.CLI_ARGS}}

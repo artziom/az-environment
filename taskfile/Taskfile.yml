@@ -4,6 +4,10 @@ dotenv: [ '.env.local' ]
 env:
   PROJECT_DIR: { sh: pwd }
 
+vars:
+  COMPOSE_FILES:
+    sh: 'for file in compose.yaml compose.override.yaml; do if [ -f "$file" ]; then printf "%s " "-f" "$(pwd)/$file"; fi; done'
+
 includes:
   env:
     optional: true
@@ -62,6 +66,12 @@ tasks:
     preconditions:
       - sh: '[ $ENV == "dev" ]'
         msg: Task only for "dev" environment!
+
+  prod-only:
+    internal: true
+    preconditions:
+      - sh: '[ $ENV == "prod" ]'
+        msg: Task only for "prod" environment!
 
   env:update:
     desc: Update environment files

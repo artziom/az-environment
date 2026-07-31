@@ -5,49 +5,67 @@ tasks:
         desc: Check docker version
         cmds:
             - docker -v
-    
+
     compose:init:
-        desc: Create local compose file
+        desc: Create local compose files
         cmds:
-            - cp environment/docker/compose/compose.project.yaml compose.project.yaml
             - cp environment/docker/compose/compose.{{.ENV}}.yaml compose.yaml
             - cp environment/docker/env/.env.compose.{{.ENV}} .env.compose
+            - rm -f compose.override.yaml
+            -   task: compose:init:project
+            -   task: compose:init:override
             - echo "Next step => Run 'task env:build' build containers"
-    
+
+    compose:init:project:
+        desc: Create project compose file, only when project does not provide its own
+        internal: true
+        status:
+            - test -f compose.project.yaml
+        cmds:
+            - cp environment/docker/compose/compose.project.yaml compose.project.yaml
+
+    compose:init:override:
+        desc: Create compose override file from project variant for current environment
+        internal: true
+        status:
+            - test ! -f compose.override.{{.ENV}}.yaml
+        cmds:
+            - cp compose.override.{{.ENV}}.yaml compose.override.yaml
+
     compose:build:
         desc: Build all containers
         internal: true
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
-    
+            - docker compose {{.COMPOSE_FILES}} build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)
+
     compose:ps:
         desc: List containers
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml ps
-    
+            - docker compose {{.COMPOSE_FILES}} ps
+
     compose:up:
         desc: Start all containers in background
         internal: true
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml up -d
-    
+            - docker compose {{.COMPOSE_FILES}} up -d
+
     compose:stop:
         desc: Start all containers
         internal: true
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml stop
+            - docker compose {{.COMPOSE_FILES}} stop
 
     compose:down:
         desc: Remove all containers
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down
-    
+            - docker compose {{.COMPOSE_FILES}} down
+
     compose:down:with-volumes:
         desc: Remove all containers
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml down --volumes
-    
+            - docker compose {{.COMPOSE_FILES}} down --volumes
+
     config:
         desc: Parse, resolve and render compose file in canonical format
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml config
+            - docker compose {{.COMPOSE_FILES}} config

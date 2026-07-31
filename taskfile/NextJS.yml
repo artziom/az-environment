@@ -9,7 +9,7 @@ tasks:
             - :node-app-not-exist
         cmds:
             - mkdir {{.PROJECT_DIR}}/{{.NODE_APP_DIR}}
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run -v {{.PROJECT_DIR}}:/app -w /app --rm node npx create-next-app@latest
+            - docker compose {{.COMPOSE_FILES}} run -v {{.PROJECT_DIR}}:/app -w /app --rm node npx create-next-app@latest
     
     server:start:
         desc: Start Next.js server (dev environment only)
@@ -17,7 +17,7 @@ tasks:
         deps:
             - :dev-only
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run -d --rm --service-ports --name nextjs-server node npm run dev
+            - docker compose {{.COMPOSE_FILES}} run -d --rm --service-ports --name nextjs-server node npm run dev
     
     server:stop:
         desc: Stop Next.js server (dev environment only)
@@ -33,7 +33,7 @@ tasks:
         deps:
             - :node-app-exist
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml run --rm node npm install
+            - docker compose {{.COMPOSE_FILES}} run --rm node npm install
     
     terminal:
         desc: Run terminal for Next.js project container
@@ -41,4 +41,4 @@ tasks:
             - :dev-only
             - :node-app-exist
         cmds:
-            - docker compose -f {{.PROJECT_DIR}}/compose.yaml -f {{.PROJECT_DIR}}/compose.override.yaml exec node bash
+            - docker compose {{.COMPOSE_FILES}} exec node bash
