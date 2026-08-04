@@ -5,14 +5,14 @@ include:
 
 services:
   php:
+    image: ${PROJECT_NAME}-php:prod
     build:
-      context: environment/docker/dockerfile/php/dev
+      context: ${PROJECT_DIR}/${PHP_APP_DIR}
+      dockerfile: ${PROJECT_DIR}/environment/docker/dockerfile/php/prod/Dockerfile
     env_file:
       - .env.compose
-    ports:
-      - ${PHP_APP_PORT}:8000
     volumes:
-      - ${PROJECT_DIR}/${PHP_APP_DIR}:/app
+      - jwt_keys:/app/config/jwt
     working_dir: /app
 
   postgres:
@@ -34,3 +34,6 @@ services:
     volumes:
       - ${PROJECT_DIR}/${NODE_APP_DIR}:/app/${NODE_APP_DIR}
     working_dir: /app/${NODE_APP_DIR}
+
+volumes:
+  jwt_keys:
