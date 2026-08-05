@@ -88,6 +88,13 @@ tasks:
         cmds:
             - docker compose {{.COMPOSE_FILES}} exec php php bin/console {{.CLI_ARGS}}
 
+    messenger:failed:
+        desc: Show messages in the failure transport (task app:messenger:failed -- <id>)
+        deps:
+            - :missing-configuration
+        cmds:
+            - docker compose {{.COMPOSE_FILES}} exec -T php php bin/console messenger:failed:show {{.CLI_ARGS}}
+
     logs:
         desc: Follow container logs (task app:logs -- php)
         deps:
