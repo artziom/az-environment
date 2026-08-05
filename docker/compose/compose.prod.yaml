@@ -19,10 +19,14 @@ services:
     image: postgres
     env_file:
       - .env.compose
-    ports:
-      - ${POSTGRES_PORT}:5432
     volumes:
-      - ${PROJECT_DIR}/.data/postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   node:
     image: ${PROJECT_NAME}-node:prod
@@ -35,3 +39,4 @@ services:
 
 volumes:
   jwt_keys:
+  postgres_data:
