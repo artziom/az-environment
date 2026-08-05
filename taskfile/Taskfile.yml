@@ -24,6 +24,9 @@ includes:
   docker:
     optional: true
     taskfile: ./environment/taskfile/Docker.yml
+  db:
+    optional: true
+    taskfile: ./environment/taskfile/Database.yml
 
 tasks:
   project-dir:

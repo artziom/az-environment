@@ -51,6 +51,14 @@ tasks:
         cmds:
             - docker compose {{.COMPOSE_FILES}} up -d
 
+    compose:up:service:
+        desc: Start a single container in background
+        internal: true
+        deps:
+            - :secrets-configured
+        cmds:
+            - docker compose {{.COMPOSE_FILES}} up -d {{.SERVICE}}
+
     compose:stop:
         desc: Start all containers
         internal: true

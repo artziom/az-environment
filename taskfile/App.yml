@@ -2,31 +2,122 @@ version: 3
 
 tasks:
     install:
-        desc: Install project dependencies
+        desc: Install project dependencies (dev environment only)
         deps:
             - :missing-configuration
+            - :dev-only
         cmds:
             -   task: :symfony:composer:install
             -   task: :nextjs:npm:install
-    
+
     start:
         desc: Start app
         deps:
             - :missing-configuration
         cmds:
+            -   task: start:{{.ENV}}
+
+    start:dev:
+        desc: Start containers and development servers
+        internal: true
+        deps:
+            - :dev-only
+        cmds:
             -   task: :docker:compose:up
             -   task: :symfony:server:start
             -   task: :nextjs:server:start
-    
+
+    start:prod:
+        desc: Start containers
+        internal: true
+        deps:
+            - :prod-only
+        cmds:
+            -   task: :docker:compose:up
+
     stop:
         desc: Stop app
         deps:
             - :missing-configuration
         cmds:
+            -   task: stop:{{.ENV}}
+
+    stop:dev:
+        desc: Stop development servers and containers
+        internal: true
+        deps:
+            - :dev-only
+        cmds:
             -   task: :nextjs:server:stop
             -   task: :symfony:server:stop
             -   task: :docker:compose:stop
-    
+
+    stop:prod:
+        desc: Stop containers
+        internal: true
+        deps:
+            - :prod-only
+        cmds:
+            -   task: :docker:compose:stop
+
+    deploy:
+        desc: Build images, back up database and restart app (prod environment only)
+        deps:
+            - :missing-configuration
+            - :prod-only
+            - :secrets-configured
+        cmds:
+            -   task: :env:build
+            -   task: :docker:compose:up:service
+                vars: { SERVICE: postgres }
+            -   task: :db:dump
+            -   task: :docker:compose:up
+            -   task: smoke
+
+    migrate:
+        desc: Run database migrations
+        deps:
+            - :missing-configuration
+        cmds:
+            - docker compose {{.COMPOSE_FILES}} exec -T php php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+
+    console:
+        desc: Run Symfony console command (task app:console -- cache:pool:clear cache.app)
+        deps:
+            - :missing-configuration
+        cmds:
+            - docker compose {{.COMPOSE_FILES}} exec php php bin/console {{.CLI_ARGS}}
+
+    logs:
+        desc: Follow container logs (task app:logs -- php)
+        deps:
+            - :missing-configuration
+        cmds:
+            - docker compose {{.COMPOSE_FILES}} logs --follow --tail 100 {{.CLI_ARGS}}
+
+    smoke:
+        desc: Wait until app containers report healthy
+        silent: true
+        cmds:
+            - |
+              for service in php node; do
+                container=$(docker compose {{.COMPOSE_FILES}} ps --quiet "${service}")
+                if [ -z "${container}" ]; then
+                  echo "Service ${service} is not running."
+                  exit 1
+                fi
+                attempt=1
+                until [ "$(docker inspect --format '{{`{{.State.Health.Status}}`}}' "${container}")" = "healthy" ]; do
+                  if [ "$attempt" -ge 60 ]; then
+                    echo "Service ${service} did not become healthy."
+                    exit 1
+                  fi
+                  attempt=$((attempt + 1))
+                  sleep 2
+                done
+                echo "Service ${service} is healthy"
+              done
+
     test:run:
         desc: Run tests
         cmds:

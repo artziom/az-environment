@@ -1,0 +1,80 @@
+version: 3
+
+vars:
+    BACKUP_DIR: '{{.PROJECT_DIR}}/.data/backups'
+    BACKUP_KEEP: '{{.BACKUP_KEEP | default 7}}'
+
+tasks:
+    wait:
+        desc: Wait until Postgres accepts connections
+        internal: true
+        silent: true
+        cmds:
+            - |
+              attempt=1
+              until docker compose {{.COMPOSE_FILES}} exec -T postgres sh -c 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"' >/dev/null 2>&1; do
+                if [ "$attempt" -ge 30 ]; then
+                  echo "Database is not reachable, giving up."
+                  exit 1
+                fi
+                attempt=$((attempt + 1))
+                sleep 2
+              done
+
+    dump:
+        desc: Dump database into .data/backups
+        deps:
+            - :missing-configuration
+        silent: true
+        cmds:
+            - task: wait
+            - mkdir -p {{.BACKUP_DIR}}
+            - |
+              dump={{.BACKUP_DIR}}/$(date +%Y-%m-%d_%H-%M-%S).sql.gz
+              docker compose {{.COMPOSE_FILES}} exec -T postgres sh -c 'pg_dump --clean --if-exists -U "$POSTGRES_USER" -d "$POSTGRES_DB"' | gzip > "${dump}"
+              if [ ! -s "${dump}" ]; then
+                rm -f "${dump}"
+                echo "Dump is empty, nothing written."
+                exit 1
+              fi
+              echo "Dumped to ${dump}"
+            - task: prune
+
+    prune:
+        desc: Remove old dumps, keeping the newest ones
+        internal: true
+        silent: true
+        cmds:
+            - |
+              cd {{.BACKUP_DIR}}
+              ls -1t *.sql.gz 2>/dev/null | tail -n +{{add .BACKUP_KEEP 1}} | while IFS= read -r outdated; do
+                rm -f "${outdated}"
+                echo "Removed outdated dump ${outdated}"
+              done
+
+    restore:
+        desc: Restore database from a dump (task db:restore -- <file>)
+        deps:
+            - :missing-configuration
+        prompt: This overwrites the current database. Do you want to continue?
+        silent: true
+        cmds:
+            - task: wait
+            - |
+              dump="{{.CLI_ARGS}}"
+              if [ -z "${dump}" ]; then
+                echo "Usage: task db:restore -- <file.sql.gz>"
+                exit 1
+              fi
+              if [ ! -f "${dump}" ]; then
+                echo "No such dump: ${dump}"
+                exit 1
+              fi
+              gunzip -c "${dump}" | docker compose {{.COMPOSE_FILES}} exec -T postgres sh -c 'psql --quiet -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+              echo "Restored from ${dump}"
+
+    list:
+        desc: List available dumps
+        silent: true
+        cmds:
+            - ls -1t {{.BACKUP_DIR}}/*.sql.gz 2>/dev/null || echo "No dumps in {{.BACKUP_DIR}}"
