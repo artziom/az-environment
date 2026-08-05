@@ -46,6 +46,8 @@ tasks:
     compose:up:
         desc: Start all containers in background
         internal: true
+        deps:
+            - :secrets-configured
         cmds:
             - docker compose {{.COMPOSE_FILES}} up -d
 

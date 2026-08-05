@@ -73,6 +73,12 @@ tasks:
       - sh: '[ $ENV == "prod" ]'
         msg: Task only for "prod" environment!
 
+  secrets-configured:
+    internal: true
+    preconditions:
+      - sh: '! grep -q CHANGE_ME .env.compose'
+        msg: "'.env.compose' still contains CHANGE_ME placeholders. Run 'task env:secrets:generate' command first."
+
   env:update:
     desc: Update environment files
     cmds:
