@@ -5,6 +5,9 @@ Generic Docker + go-task base for Symfony (PHP) + Next.js (Node) + Postgres proj
 Provides the taskfile includes, the compose files and the Dockerfiles; the project repository
 keeps everything project-specific.
 
+Project-specific tasks go into `Taskfile.project.yml` in the project root — `Taskfile.yml` includes
+it when present, flattened (no namespace), so the project picks its own task names.
+
 Installation
 ------------
 

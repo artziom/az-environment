@@ -27,6 +27,10 @@ includes:
   db:
     optional: true
     taskfile: ./environment/taskfile/Database.yml
+  project:
+    optional: true
+    flatten: true
+    taskfile: ./Taskfile.project.yml
 
 tasks:
   project-dir:
